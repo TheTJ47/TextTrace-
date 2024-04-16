@@ -1571,7 +1571,7 @@ SCRIPT_PATH = "../script.js"
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template('index.html')
 
 
 @app.route('/recognize_handwriting', methods=['POST'])
