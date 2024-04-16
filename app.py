@@ -1811,7 +1811,7 @@ app = Flask(__name__)
 
 # Configure pytesseract path to Tesseract executable
 # Update the path below to where Tesseract is installed on your system
-# pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+pytesseract.pytesseract.tesseract_cmd = r"C:\Users\bagal\flaskproject\10-4 text rec\flaskproject\Tesseract-OCR\tesseract.exe"
 
 # Define paths to CSS and JavaScript files
 CSS_PATH = "../style.css"
