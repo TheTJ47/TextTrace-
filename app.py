@@ -1563,7 +1563,7 @@ app = Flask(__name__)
 
 # Configure pytesseract path to Tesseract executable
 # Update the path below to where Tesseract is installed on your system
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+# pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 # Define paths to CSS and JavaScript files
 CSS_PATH = "../style.css"
@@ -1654,5 +1654,6 @@ def download_text():
         return response
 
 if __name__ == '__main__':
-    # Run Flask app on all network interfaces
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
