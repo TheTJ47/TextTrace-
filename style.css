@@ -24,8 +24,19 @@ nav {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-  border-bottom: 1px solid #fff;
+  position: relative; /* Add position relative */
 }
+
+nav::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%; /* Span full width */
+  height: 1px;
+  background-color: #fff; /* Color can be changed or removed */
+}
+
 
 .logo a {
   font-size: 24px;
