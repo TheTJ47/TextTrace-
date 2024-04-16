@@ -58,6 +58,7 @@ nav ul li a:hover {
   /* background: linear-gradient(to right bottom, #ff0000, #ff952b, #ff952b, #ff0303f1); */
   background: url("gif.gif");
   background-position: center;
+  background-size: auto;
   padding: 100px 0;
   text-align: center;
   color: #fff;
@@ -81,7 +82,7 @@ nav ul li a:hover {
 .btn {
   display: inline-block;
   background-color: #fff;
-  color: purple;
+  color: #fe01ae;
   padding: 12px 24px;
   border-radius: 30px;
   text-decoration: none;
@@ -108,7 +109,7 @@ nav ul li a:hover {
   font-size: 36px;
   text-align: center;
   margin-bottom: 40px;
-  color: #e6007a;
+  color: #fe01ae;
 }
 
 .step-container, .feature-container {
@@ -177,7 +178,7 @@ nav ul li a:hover {
 
 .select-file-btn {
   background-color: black;
-  color: #e6007a;
+  font-size: 20px; color: #e6007a;
   border: 2px dashed #e6007a;
   padding: 30px 100px;
   border-radius: 3px;
