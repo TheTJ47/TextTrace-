@@ -22,10 +22,11 @@ nav {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  max-width: 1200px;
+  width: 100%; /* Set width to 100% */
   margin: 0 auto;
   position: relative; /* Add position relative */
 }
+
 
 nav::after {
   content: '';
@@ -36,6 +37,7 @@ nav::after {
   height: 1px;
   background-color: #fff; /* Color can be changed or removed */
 }
+
 
 
 .logo a {
