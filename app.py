@@ -1566,12 +1566,12 @@ app = Flask(__name__)
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 # Define paths to CSS and JavaScript files
-CSS_PATH = "../static/style.css"
-SCRIPT_PATH = "../static/script.js"
+CSS_PATH = "../style.css"
+SCRIPT_PATH = "../script.js"
 
 @app.route('/')
 def index():
-    return render_template("index.html", css_path=CSS_PATH, script_path=SCRIPT_PATH)
+    return render_template("index.html")
 
 
 @app.route('/recognize_handwriting', methods=['POST'])
