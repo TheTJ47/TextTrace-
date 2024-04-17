@@ -1806,12 +1806,16 @@ import pytesseract
 import docx
 from docx import Document
 import locale
+import os
 
 app = Flask(__name__)
 
 # Configure pytesseract path to Tesseract executable
 # Update the path below to where Tesseract is installed on your system
-pytesseract.pytesseract.tesseract_cmd = r"tesseract/tesseract.exe"
+
+
+tesseract_path = os.environ.get('TESSERACT_PATH', 'default/path/to/tesseract.exe')
+pytesseract.pytesseract.tesseract_cmd = tesseract_path
 
 
 # Define paths to CSS and JavaScript files
