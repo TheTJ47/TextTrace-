@@ -1902,6 +1902,124 @@
 
 # MOST ACCURATE WORKING CODE
 
+# from flask import Flask, render_template, request, jsonify, send_file, make_response
+# import cv2
+# import numpy as np
+# import io
+# from fpdf import FPDF
+# import tempfile
+# import pytesseract
+# import docx
+# from docx import Document
+# import locale
+# import os
+
+# app = Flask(__name__)
+
+# # Configure pytesseract path to Tesseract executable
+# # Update the path below to where Tesseract is installed on your system
+
+
+# tesseract_path = os.environ.get('TESSERACT_PATH', 'default/path/to/tesseract.exe')
+# pytesseract.pytesseract.tesseract_cmd = tesseract_path
+
+
+# # Define paths to CSS and JavaScript files
+# CSS_PATH = "../style.css"
+# SCRIPT_PATH = "../script.js"
+
+# @app.route('/')
+# def index():
+#     return render_template('index.html')
+
+
+# @app.route('/recognize_handwriting', methods=['POST'])
+# def recognize_handwriting():
+#     # Get the image file from the request
+#     image_file = request.files['image']
+
+#     # Convert the image data to OpenCV format
+#     img_array = np.frombuffer(image_file.read(), dtype=np.uint8)
+#     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+
+#     # Check if the image was loaded successfully
+#     if img is None:
+#         return jsonify({'error': 'Unable to read the image'}), 500
+
+#     # Perform OCR using pytesseract
+#     text_detected = pytesseract.image_to_string(img)
+
+#     # Check if text was detected
+#     if not text_detected.strip():
+#         return jsonify({'error': 'No text detected in the image'}), 400
+
+#     # Remove non-ASCII characters from the text
+#     text_detected_cleaned = ''.join(char for char in text_detected if ord(char) < 128)
+
+#     # Convert detected text to PDF
+#     pdf = FPDF()
+#     pdf.add_page()
+#     pdf.set_font("Arial", size=12)
+#     pdf.cell(200, 10, txt="Handwriting Recognition Result", ln=True, align="C")
+#     pdf.cell(200, 10, txt="", ln=True)
+#     pdf.multi_cell(0, 10, txt=text_detected_cleaned)
+
+#     # Create a temporary file to save the PDF
+#     with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+#         pdf.output(tmp_file.name)
+#         tmp_file.seek(0)
+
+#         # Send the temporary file as an attachment
+#         response = make_response(send_file(tmp_file.name, as_attachment=True))
+#         response.headers['Content-Disposition'] = 'attachment; filename=recognized_text.pdf'
+#         return response
+
+# @app.route('/download_text', methods=['POST'])
+# def download_text():
+#     # Get the image file from the request
+#     image_file = request.files['image']
+
+#     # Convert the image data to OpenCV format
+#     img_array = np.frombuffer(image_file.read(), dtype=np.uint8)
+#     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+
+#     # Check if the image was loaded successfully
+#     if img is None:
+#         return jsonify({'error': 'Unable to read the image'}), 500
+
+#     # Perform OCR using pytesseract
+#     text_detected = pytesseract.image_to_string(img)
+
+#     # Check if text was detected
+#     if not text_detected.strip():
+#         return jsonify({'error': 'No text detected in the image'}), 400
+
+#     # Remove non-ASCII characters from the text
+#     text_detected_cleaned = ''.join(char for char in text_detected if ord(char) < 128)
+
+#     # Create a Word document with the text content
+#     doc = Document()
+#     doc.add_heading('Handwriting Recognition Result', 0)
+#     doc.add_paragraph(text_detected_cleaned)
+
+#     # Create a temporary file to save the Word document
+#     with tempfile.NamedTemporaryFile(delete=False, suffix='.docx') as tmp_file:
+#         doc.save(tmp_file.name)
+#         tmp_file.seek(0)
+
+#         # Send the temporary file as an attachment
+#         response = make_response(send_file(tmp_file.name, as_attachment=True))
+#         response.headers['Content-Disposition'] = 'attachment; filename=recognized_text.docx'
+#         return response
+
+# if __name__ == '__main__':
+#     import os
+#     port = int(os.environ.get('PORT', 5000))
+#     app.run(host='0.0.0.0', port=port)
+
+
+
+
 from flask import Flask, render_template, request, jsonify, send_file, make_response
 import cv2
 import numpy as np
@@ -1911,18 +2029,13 @@ import tempfile
 import pytesseract
 import docx
 from docx import Document
-import locale
 import os
 
 app = Flask(__name__)
 
 # Configure pytesseract path to Tesseract executable
-# Update the path below to where Tesseract is installed on your system
-
-
 tesseract_path = os.environ.get('TESSERACT_PATH', 'default/path/to/tesseract.exe')
 pytesseract.pytesseract.tesseract_cmd = tesseract_path
-
 
 # Define paths to CSS and JavaScript files
 CSS_PATH = "../style.css"
@@ -1932,87 +2045,93 @@ SCRIPT_PATH = "../script.js"
 def index():
     return render_template('index.html')
 
-
 @app.route('/recognize_handwriting', methods=['POST'])
 def recognize_handwriting():
-    # Get the image file from the request
-    image_file = request.files['image']
+    try:
+        # Get the image file from the request
+        image_file = request.files['image']
 
-    # Convert the image data to OpenCV format
-    img_array = np.frombuffer(image_file.read(), dtype=np.uint8)
-    img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+        # Convert the image data to OpenCV format
+        img_array = np.frombuffer(image_file.read(), dtype=np.uint8)
+        img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
 
-    # Check if the image was loaded successfully
-    if img is None:
-        return jsonify({'error': 'Unable to read the image'}), 500
+        # Check if the image was loaded successfully
+        if img is None:
+            return jsonify({'error': 'Unable to read the image'}), 500
 
-    # Perform OCR using pytesseract
-    text_detected = pytesseract.image_to_string(img)
+        # Perform OCR using pytesseract
+        text_detected = pytesseract.image_to_string(img)
 
-    # Check if text was detected
-    if not text_detected.strip():
-        return jsonify({'error': 'No text detected in the image'}), 400
+        # Check if text was detected
+        if not text_detected.strip():
+            return jsonify({'error': 'No text detected in the image'}), 400
 
-    # Remove non-ASCII characters from the text
-    text_detected_cleaned = ''.join(char for char in text_detected if ord(char) < 128)
+        # Remove non-ASCII characters from the text
+        text_detected_cleaned = ''.join(char for char in text_detected if ord(char) < 128)
 
-    # Convert detected text to PDF
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-    pdf.cell(200, 10, txt="Handwriting Recognition Result", ln=True, align="C")
-    pdf.cell(200, 10, txt="", ln=True)
-    pdf.multi_cell(0, 10, txt=text_detected_cleaned)
+        # Convert detected text to PDF
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Arial", size=12)
+        pdf.cell(200, 10, txt="Handwriting Recognition Result", ln=True, align="C")
+        pdf.cell(200, 10, txt="", ln=True)
+        pdf.multi_cell(0, 10, txt=text_detected_cleaned)
 
-    # Create a temporary file to save the PDF
-    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-        pdf.output(tmp_file.name)
-        tmp_file.seek(0)
+        # Create a temporary file to save the PDF
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            pdf.output(tmp_file.name)
+            tmp_file.seek(0)
 
-        # Send the temporary file as an attachment
-        response = make_response(send_file(tmp_file.name, as_attachment=True))
-        response.headers['Content-Disposition'] = 'attachment; filename=recognized_text.pdf'
-        return response
+            # Send the temporary file as an attachment
+            response = make_response(send_file(tmp_file.name, as_attachment=True))
+            response.headers['Content-Disposition'] = 'attachment; filename=recognized_text.pdf'
+            return response
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/download_text', methods=['POST'])
 def download_text():
-    # Get the image file from the request
-    image_file = request.files['image']
+    try:
+        # Get the image file from the request
+        image_file = request.files['image']
 
-    # Convert the image data to OpenCV format
-    img_array = np.frombuffer(image_file.read(), dtype=np.uint8)
-    img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+        # Convert the image data to OpenCV format
+        img_array = np.frombuffer(image_file.read(), dtype=np.uint8)
+        img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
 
-    # Check if the image was loaded successfully
-    if img is None:
-        return jsonify({'error': 'Unable to read the image'}), 500
+        # Check if the image was loaded successfully
+        if img is None:
+            return jsonify({'error': 'Unable to read the image'}), 500
 
-    # Perform OCR using pytesseract
-    text_detected = pytesseract.image_to_string(img)
+        # Perform OCR using pytesseract
+        text_detected = pytesseract.image_to_string(img)
 
-    # Check if text was detected
-    if not text_detected.strip():
-        return jsonify({'error': 'No text detected in the image'}), 400
+        # Check if text was detected
+        if not text_detected.strip():
+            return jsonify({'error': 'No text detected in the image'}), 400
 
-    # Remove non-ASCII characters from the text
-    text_detected_cleaned = ''.join(char for char in text_detected if ord(char) < 128)
+        # Remove non-ASCII characters from the text
+        text_detected_cleaned = ''.join(char for char in text_detected if ord(char) < 128)
 
-    # Create a Word document with the text content
-    doc = Document()
-    doc.add_heading('Handwriting Recognition Result', 0)
-    doc.add_paragraph(text_detected_cleaned)
+        # Create a Word document with the text content
+        doc = Document()
+        doc.add_heading('Handwriting Recognition Result', 0)
+        doc.add_paragraph(text_detected_cleaned)
 
-    # Create a temporary file to save the Word document
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.docx') as tmp_file:
-        doc.save(tmp_file.name)
-        tmp_file.seek(0)
+        # Create a temporary file to save the Word document
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.docx') as tmp_file:
+            doc.save(tmp_file.name)
+            tmp_file.seek(0)
 
-        # Send the temporary file as an attachment
-        response = make_response(send_file(tmp_file.name, as_attachment=True))
-        response.headers['Content-Disposition'] = 'attachment; filename=recognized_text.docx'
-        return response
+            # Send the temporary file as an attachment
+            response = make_response(send_file(tmp_file.name, as_attachment=True))
+            response.headers['Content-Disposition'] = 'attachment; filename=recognized_text.docx'
+            return response
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    import os
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
