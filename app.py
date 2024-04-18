@@ -2282,7 +2282,7 @@
 
 
 
-from flask import Flask, render_template, request, jsonify, send_file, make_response
+from flask import Flask, send_from_directory, request, jsonify, send_file, make_response
 import cv2
 import numpy as np
 import io
@@ -2302,12 +2302,12 @@ pytesseract.pytesseract.tesseract_cmd = r"static\Tesseract-OCR\tesseract.exe"
 # Define paths to CSS and JavaScript files
 import os
 
-CSS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "style.css")
-SCRIPT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "script.js")
+CSS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "style.css")
+SCRIPT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "script.js")
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return send_from_directory(app.root_path, 'index.html')
 
 @app.route('/recognize_handwriting', methods=['POST'])
 def recognize_handwriting():
