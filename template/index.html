@@ -6,10 +6,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>TextTrace</title>
     <script src="https://unpkg.com/docx@7.4.1/build/index.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/toml@3.0.0/dist/toml.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
@@ -22,7 +21,6 @@
                 <li><a href="#about">About</a></li>
                 <li><a href="#how-it-works">How It Works</a></li>
                 <li><a href="#features">Features</a></li>
-                <li><a href="#empty" >               </a></li>
             </ul>
         </nav>
     </header>
@@ -36,7 +34,7 @@
                     <a href="#upload" class="btn">Get Started</a>
                 </div>
             </div>
-        </section>
+        </section>z
 
         <section id="about" class="section">
             <div class="container">
@@ -129,15 +127,16 @@
             </div>
         </section>
         
+
         <section id="upload" class="section">
             <div class="container">
                 <h2>Upload Your Image</h2>
-                    <div class="upload-box">
-                        <p style="font-size: 16px; color: pink;">Note (prefer below for Errorless Analysis):</p>
-                        <p style="font-size: 16px; color: rgba(255, 0, 0, 0.64);margin-bottom: -20px ;">File extension support: png, jpg, tiff.</p>
-                        <p style="font-size: 16px; color: rgba(255, 0, 0, 0.64);margin-bottom: -20px ;">File size limit: 2 MB.</p>
-                        <p style="font-size: 16px; color: rgba(255, 0, 0, 0.64)">Image dimension limit: 1500 pixels.</p>
-                        <div class="upload-options">
+                <div class="upload-box">
+                    <p style="font-size: 16px; color: pink;">Note:</p>
+                    <p style="font-size: 16px; color: #7a7979;">File extension support: png, jpg, tiff.</p>
+                    <p style="font-size: 16px; color: #7a7979;">File size limit: 2 MB.</p>
+                    <p style="font-size: 16px; color: #7a7979;">Image dimension limit: 1500 pixels.</p>
+                    <div class="upload-options">
                         <div class="drag-and-drop">
                             <input type="file" id="fileInput" class="file-input" accept="image/*" style="display: none;">
                         </div>
@@ -151,15 +150,19 @@
                     <button class="analyze-btn" onclick="resizeAndRecognize()">Download PDF</button>
                     <button class="download-text-btn" onclick="downloadAsText()">Download as Word</button>
                 </div>
+
+            
             </div>
         </section>
     </main>
+
     <footer>
         <div class="container">
             <p>&copy; 2024 TextTrace. All rights reserved.</p>
         </div>
     </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="script.js"></script>
+    <script src="/static/script.js"></script>
 </body>
 </html>

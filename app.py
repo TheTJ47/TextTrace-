@@ -2140,46 +2140,195 @@
 
 
 
+# import cv2
+# import numpy as np
+# import io
+# from fpdf import FPDF
+# import easyocr
+# from docx import Document
+# from netlify.functions import Handler, lambda_context
+# from netlify.utils import build_zip_bytes
+# import toml
+
+# # Create an EasyOCR reader
+# reader = easyocr.Reader(['en'])
+
+# def recognize_handwriting(event, context):
+#     # Get the image file from the request
+#     image_file = event.body
+
+#     # Convert the image data to OpenCV format
+#     img_array = np.frombuffer(image_file, dtype=np.uint8)
+#     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+
+#     # Check if the image was loaded successfully
+#     if img is None:
+#         return {
+#             "statusCode": 500,
+#             "body": "Unable to read the image"
+#         }
+
+#     # Perform OCR
+#     text_detected = reader.readtext(img)
+
+#     # Check if text was detected
+#     if not text_detected:
+#         return {
+#             "statusCode": 400,
+#             "body": "No text detected in the image"
+#         }
+
+#     # Join the detected text
+#     text_detected_cleaned = ' '.join([text[1] for text in text_detected])
+
+#     # Convert detected text to PDF
+#     pdf = FPDF()
+#     pdf.add_page()
+#     pdf.set_font("Arial", size=12)
+#     pdf.cell(200, 10, txt="Handwriting Recognition Result", ln=True, align="C")
+#     pdf.cell(200, 10, txt="", ln=True)
+#     pdf.multi_cell(0, 10, txt=text_detected_cleaned)
+
+#     # Create a temporary file to save the PDF
+#     buffer = io.BytesIO()
+#     pdf.output(buffer)
+#     buffer.seek(0)
+
+#     # Upload the PDF to Netlify's file hosting
+#     file_name = "recognized_text.pdf"
+#     file_path = f"/tmp/{file_name}"
+#     with open(file_path, "wb") as f:
+#         f.write(buffer.getvalue())
+
+#     # Build the ZIP file with the PDF
+#     body = build_zip_bytes(file_name, Path("/tmp"))
+
+#     # Get the site URL from the context
+#     site_url = lambda_context(context).site.url
+
+#     # Construct the download URL
+#     download_url = f"{site_url}/{file_name}"
+
+#     return {
+#         "statusCode": 200,
+#         "body": toml.dumps({"url": download_url}),
+#     }
+
+# def download_text(event, context):
+#     # Get the image file from the request
+#     image_file = event.body
+
+#     # Convert the image data to OpenCV format
+#     img_array = np.frombuffer(image_file, dtype=np.uint8)
+#     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+
+#     # Check if the image was loaded successfully
+#     if img is None:
+#         return {
+#             "statusCode": 500,
+#             "body": "Unable to read the image"
+#         }
+
+#     # Perform OCR
+#     text_detected = reader.readtext(img)
+
+#     # Check if text was detected
+#     if not text_detected:
+#         return {
+#             "statusCode": 400,
+#             "body": "No text detected in the image"
+#         }
+
+#     # Join the detected text
+#     text_detected_cleaned = ' '.join([text[1] for text in text_detected])
+
+#     # Create a Word document with the text content
+#     doc = Document()
+#     doc.add_heading('Handwriting Recognition Result', 0)
+#     doc.add_paragraph(text_detected_cleaned)
+
+#     # Create a temporary file to save the Word document
+#     buffer = io.BytesIO()
+#     doc.save(buffer)
+#     buffer.seek(0)
+
+#     # Upload the Word document to Netlify's file hosting
+#     file_name = "recognized_text.docx"
+#     file_path = f"/tmp/{file_name}"
+#     with open(file_path, "wb") as f:
+#         f.write(buffer.getvalue())
+
+#     # Build the ZIP file with the Word document
+#     body = build_zip_bytes(file_name, Path("/tmp"))
+
+#     # Get the site URL from the context
+#     site_url = lambda_context(context).site.url
+
+#     # Construct the download URL
+#     download_url = f"{site_url}/{file_name}"
+
+#     return {
+#         "statusCode": 200,
+#         "body": toml.dumps({"url": download_url}),
+#     }
+
+# recognize_handwriting_handler = Handler("recognize_handwriting")
+# download_text_handler = Handler("download_text")
+
+
+
+
+
+
+
+
+from flask import Flask, render_template, request, jsonify, send_file, make_response
 import cv2
 import numpy as np
 import io
 from fpdf import FPDF
-import easyocr
+import tempfile
+import pytesseract
+import docx
 from docx import Document
-from netlify.functions import Handler, lambda_context
-from netlify.utils import build_zip_bytes
-import toml
+import locale
 
-# Create an EasyOCR reader
-reader = easyocr.Reader(['en'])
+app = Flask(__name__)
 
-def recognize_handwriting(event, context):
+# Configure pytesseract path to Tesseract executable
+# Update the path below to where Tesseract is installed on your system
+pytesseract.pytesseract.tesseract_cmd = r"C:\Users\bagal\flaskproject\10-4 text rec\flaskproject\Tesseract-OCR\tesseract.exe"
+
+# Define paths to CSS and JavaScript files
+CSS_PATH = "../static/style.css"
+SCRIPT_PATH = "../static/script.js"
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/recognize_handwriting', methods=['POST'])
+def recognize_handwriting():
     # Get the image file from the request
-    image_file = event.body
+    image_file = request.files['image']
 
     # Convert the image data to OpenCV format
-    img_array = np.frombuffer(image_file, dtype=np.uint8)
+    img_array = np.frombuffer(image_file.read(), dtype=np.uint8)
     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
 
     # Check if the image was loaded successfully
     if img is None:
-        return {
-            "statusCode": 500,
-            "body": "Unable to read the image"
-        }
+        return jsonify({'error': 'Unable to read the image'}), 500
 
-    # Perform OCR
-    text_detected = reader.readtext(img)
+    # Perform OCR using pytesseract
+    text_detected = pytesseract.image_to_string(img)
 
     # Check if text was detected
-    if not text_detected:
-        return {
-            "statusCode": 400,
-            "body": "No text detected in the image"
-        }
+    if not text_detected.strip():
+        return jsonify({'error': 'No text detected in the image'}), 400
 
-    # Join the detected text
-    text_detected_cleaned = ' '.join([text[1] for text in text_detected])
+    # Remove non-ASCII characters from the text
+    text_detected_cleaned = ''.join(char for char in text_detected if ord(char) < 128)
 
     # Convert detected text to PDF
     pdf = FPDF()
@@ -2190,57 +2339,37 @@ def recognize_handwriting(event, context):
     pdf.multi_cell(0, 10, txt=text_detected_cleaned)
 
     # Create a temporary file to save the PDF
-    buffer = io.BytesIO()
-    pdf.output(buffer)
-    buffer.seek(0)
+    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+        pdf.output(tmp_file.name)
+        tmp_file.seek(0)
 
-    # Upload the PDF to Netlify's file hosting
-    file_name = "recognized_text.pdf"
-    file_path = f"/tmp/{file_name}"
-    with open(file_path, "wb") as f:
-        f.write(buffer.getvalue())
+        # Send the temporary file as an attachment
+        response = make_response(send_file(tmp_file.name, as_attachment=True))
+        response.headers['Content-Disposition'] = 'attachment; filename=recognized_text.pdf'
+        return response
 
-    # Build the ZIP file with the PDF
-    body = build_zip_bytes(file_name, Path("/tmp"))
-
-    # Get the site URL from the context
-    site_url = lambda_context(context).site.url
-
-    # Construct the download URL
-    download_url = f"{site_url}/{file_name}"
-
-    return {
-        "statusCode": 200,
-        "body": toml.dumps({"url": download_url}),
-    }
-
-def download_text(event, context):
+@app.route('/download_text', methods=['POST'])
+def download_text():
     # Get the image file from the request
-    image_file = event.body
+    image_file = request.files['image']
 
     # Convert the image data to OpenCV format
-    img_array = np.frombuffer(image_file, dtype=np.uint8)
+    img_array = np.frombuffer(image_file.read(), dtype=np.uint8)
     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
 
     # Check if the image was loaded successfully
     if img is None:
-        return {
-            "statusCode": 500,
-            "body": "Unable to read the image"
-        }
+        return jsonify({'error': 'Unable to read the image'}), 500
 
-    # Perform OCR
-    text_detected = reader.readtext(img)
+    # Perform OCR using pytesseract
+    text_detected = pytesseract.image_to_string(img)
 
     # Check if text was detected
-    if not text_detected:
-        return {
-            "statusCode": 400,
-            "body": "No text detected in the image"
-        }
+    if not text_detected.strip():
+        return jsonify({'error': 'No text detected in the image'}), 400
 
-    # Join the detected text
-    text_detected_cleaned = ' '.join([text[1] for text in text_detected])
+    # Remove non-ASCII characters from the text
+    text_detected_cleaned = ''.join(char for char in text_detected if ord(char) < 128)
 
     # Create a Word document with the text content
     doc = Document()
@@ -2248,29 +2377,15 @@ def download_text(event, context):
     doc.add_paragraph(text_detected_cleaned)
 
     # Create a temporary file to save the Word document
-    buffer = io.BytesIO()
-    doc.save(buffer)
-    buffer.seek(0)
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.docx') as tmp_file:
+        doc.save(tmp_file.name)
+        tmp_file.seek(0)
 
-    # Upload the Word document to Netlify's file hosting
-    file_name = "recognized_text.docx"
-    file_path = f"/tmp/{file_name}"
-    with open(file_path, "wb") as f:
-        f.write(buffer.getvalue())
+        # Send the temporary file as an attachment
+        response = make_response(send_file(tmp_file.name, as_attachment=True))
+        response.headers['Content-Disposition'] = 'attachment; filename=recognized_text.docx'
+        return response
 
-    # Build the ZIP file with the Word document
-    body = build_zip_bytes(file_name, Path("/tmp"))
-
-    # Get the site URL from the context
-    site_url = lambda_context(context).site.url
-
-    # Construct the download URL
-    download_url = f"{site_url}/{file_name}"
-
-    return {
-        "statusCode": 200,
-        "body": toml.dumps({"url": download_url}),
-    }
-
-recognize_handwriting_handler = Handler("recognize_handwriting")
-download_text_handler = Handler("download_text")
+if __name__ == '__main__':
+    # Run Flask app on all network interfaces
+    app.run(host='0.0.0.0', port=5000, debug=True)
