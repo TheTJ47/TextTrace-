@@ -2300,8 +2300,8 @@ app = Flask(__name__)
 pytesseract.pytesseract.tesseract_cmd = r"static\Tesseract-OCR\tesseract.exe"
 
 # Define paths to CSS and JavaScript files
-CSS_PATH = "../style.css"
-SCRIPT_PATH = "../script.js"
+CSS_PATH = "/style.css"
+SCRIPT_PATH = "/script.js"
 
 @app.route('/')
 def index():
