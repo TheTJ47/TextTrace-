@@ -587,7 +587,6 @@
 
 
 
-
 const fileInput = document.getElementById('fileInput');
 const uploadedFilename = document.getElementById('uploadedFilename');
 const uploadedImage = document.getElementById('uploadedImage');
