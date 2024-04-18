@@ -3,6 +3,3 @@ opencv-python
 pytesseract
 fpdf
 python-docx
-numpy
-easyocr
-toml
