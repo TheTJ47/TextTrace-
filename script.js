@@ -588,8 +588,6 @@
 
 
 
-
-
 const fileInput = document.getElementById('fileInput');
 const uploadedFilename = document.getElementById('uploadedFilename');
 const uploadedImage = document.getElementById('uploadedImage');
@@ -674,8 +672,8 @@ async function resizeAndRecognize() {
                 overlay.style.display = 'none'; // Hide overlay
 
                 if (response.ok) {
-                    const pdfBlob = await response.blob();
-                    const downloadUrl = URL.createObjectURL(pdfBlob);
+                    const jsonResponse = await toml.parse(await response.text());
+                    const downloadUrl = jsonResponse.url;
                     window.open(downloadUrl); // Open the PDF in a new tab
                 } else {
                     const errorResponse = await response.json();
@@ -710,15 +708,15 @@ async function downloadAsText() {
 
             try {
                 overlay.style.display = 'block'; // Show overlay
-                const response = await fetch('/.netlify/functions/recognize_handwriting', {
+                const response = await fetch('/.netlify/functions/download_text', {
                     method: 'POST',
-                    body: JSON.stringify(formData),
+                    body: formData,
                 });
 
                 overlay.style.display = 'none'; // Hide overlay
 
                 if (response.ok) {
-                    const jsonResponse = await response.json();
+                    const jsonResponse = await toml.parse(await response.text());
                     const downloadUrl = jsonResponse.url;
                     window.location.href = downloadUrl; // Redirect to download URL
                 } else {

@@ -2146,7 +2146,9 @@ import io
 from fpdf import FPDF
 import easyocr
 from docx import Document
-from netlify.functions import Handler
+from netlify.functions import Handler, lambda_context
+from netlify.utils import build_zip_bytes
+import toml
 
 # Create an EasyOCR reader
 reader = easyocr.Reader(['en'])
@@ -2192,15 +2194,24 @@ def recognize_handwriting(event, context):
     pdf.output(buffer)
     buffer.seek(0)
 
-    # Return the PDF file as the response
+    # Upload the PDF to Netlify's file hosting
+    file_name = "recognized_text.pdf"
+    file_path = f"/tmp/{file_name}"
+    with open(file_path, "wb") as f:
+        f.write(buffer.getvalue())
+
+    # Build the ZIP file with the PDF
+    body = build_zip_bytes(file_name, Path("/tmp"))
+
+    # Get the site URL from the context
+    site_url = lambda_context(context).site.url
+
+    # Construct the download URL
+    download_url = f"{site_url}/{file_name}"
+
     return {
         "statusCode": 200,
-        "headers": {
-            "Content-Type": "application/pdf",
-            "Content-Disposition": "attachment; filename=recognized_text.pdf"
-        },
-        "body": buffer.getvalue(),
-        "isBase64Encoded": True
+        "body": toml.dumps({"url": download_url}),
     }
 
 def download_text(event, context):
@@ -2241,15 +2252,24 @@ def download_text(event, context):
     doc.save(buffer)
     buffer.seek(0)
 
-    # Return the Word file as the response
+    # Upload the Word document to Netlify's file hosting
+    file_name = "recognized_text.docx"
+    file_path = f"/tmp/{file_name}"
+    with open(file_path, "wb") as f:
+        f.write(buffer.getvalue())
+
+    # Build the ZIP file with the Word document
+    body = build_zip_bytes(file_name, Path("/tmp"))
+
+    # Get the site URL from the context
+    site_url = lambda_context(context).site.url
+
+    # Construct the download URL
+    download_url = f"{site_url}/{file_name}"
+
     return {
         "statusCode": 200,
-        "headers": {
-            "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "Content-Disposition": "attachment; filename=recognized_text.docx"
-        },
-        "body": buffer.getvalue(),
-        "isBase64Encoded": True
+        "body": toml.dumps({"url": download_url}),
     }
 
 recognize_handwriting_handler = Handler("recognize_handwriting")
