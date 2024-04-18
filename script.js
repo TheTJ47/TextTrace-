@@ -668,15 +668,15 @@ async function resizeAndRecognize() {
                 overlay.style.display = 'block'; // Show overlay
                 const response = await fetch('/.netlify/functions/recognize_handwriting', {
                     method: 'POST',
-                    body: JSON.stringify(formData),
+                    body: formData,
                 });
 
                 overlay.style.display = 'none'; // Hide overlay
 
                 if (response.ok) {
-                    const jsonResponse = await response.json();
-                    const downloadUrl = jsonResponse.url;
-                    window.location.href = downloadUrl; // Redirect to download URL
+                    const pdfBlob = await response.blob();
+                    const downloadUrl = URL.createObjectURL(pdfBlob);
+                    window.open(downloadUrl); // Open the PDF in a new tab
                 } else {
                     const errorResponse = await response.json();
                     alert(`Failed to recognize handwriting: ${errorResponse.error}`);

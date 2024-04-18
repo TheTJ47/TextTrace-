@@ -2140,48 +2140,41 @@
 
 
 
-   
-from flask import Flask, render_template, request, jsonify, send_file, make_response
 import cv2
 import numpy as np
 import io
 from fpdf import FPDF
-import tempfile
 import easyocr
 from docx import Document
-
-app = Flask(__name__)
-
-# Define paths to CSS and JavaScript files
-CSS_PATH = "../style.css"
-SCRIPT_PATH = "../script.js"
+from netlify.functions import Handler
 
 # Create an EasyOCR reader
 reader = easyocr.Reader(['en'])
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/recognize_handwriting', methods=['POST'])
-def recognize_handwriting():
+def recognize_handwriting(event, context):
     # Get the image file from the request
-    image_file = request.files['image']
+    image_file = event.body
 
     # Convert the image data to OpenCV format
-    img_array = np.frombuffer(image_file.read(), dtype=np.uint8)
+    img_array = np.frombuffer(image_file, dtype=np.uint8)
     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
 
     # Check if the image was loaded successfully
     if img is None:
-        return jsonify({'error': 'Unable to read the image'}), 500
+        return {
+            "statusCode": 500,
+            "body": "Unable to read the image"
+        }
 
     # Perform OCR
     text_detected = reader.readtext(img)
 
     # Check if text was detected
     if not text_detected:
-        return jsonify({'error': 'No text detected in the image'}), 400
+        return {
+            "statusCode": 400,
+            "body": "No text detected in the image"
+        }
 
     # Join the detected text
     text_detected_cleaned = ' '.join([text[1] for text in text_detected])
@@ -2195,34 +2188,45 @@ def recognize_handwriting():
     pdf.multi_cell(0, 10, txt=text_detected_cleaned)
 
     # Create a temporary file to save the PDF
-    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-        pdf.output(tmp_file.name)
-        tmp_file.seek(0)
+    buffer = io.BytesIO()
+    pdf.output(buffer)
+    buffer.seek(0)
 
-        # Send the temporary file as an attachment
-        response = make_response(send_file(tmp_file.name, as_attachment=True))
-        response.headers['Content-Disposition'] = 'attachment; filename=recognized_text.pdf'
-        return response
+    # Return the PDF file as the response
+    return {
+        "statusCode": 200,
+        "headers": {
+            "Content-Type": "application/pdf",
+            "Content-Disposition": "attachment; filename=recognized_text.pdf"
+        },
+        "body": buffer.getvalue(),
+        "isBase64Encoded": True
+    }
 
-@app.route('/download_text', methods=['POST'])
-def download_text():
+def download_text(event, context):
     # Get the image file from the request
-    image_file = request.files['image']
+    image_file = event.body
 
     # Convert the image data to OpenCV format
-    img_array = np.frombuffer(image_file.read(), dtype=np.uint8)
+    img_array = np.frombuffer(image_file, dtype=np.uint8)
     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
 
     # Check if the image was loaded successfully
     if img is None:
-        return jsonify({'error': 'Unable to read the image'}), 500
+        return {
+            "statusCode": 500,
+            "body": "Unable to read the image"
+        }
 
     # Perform OCR
     text_detected = reader.readtext(img)
 
     # Check if text was detected
     if not text_detected:
-        return jsonify({'error': 'No text detected in the image'}), 400
+        return {
+            "statusCode": 400,
+            "body": "No text detected in the image"
+        }
 
     # Join the detected text
     text_detected_cleaned = ' '.join([text[1] for text in text_detected])
@@ -2233,16 +2237,20 @@ def download_text():
     doc.add_paragraph(text_detected_cleaned)
 
     # Create a temporary file to save the Word document
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.docx') as tmp_file:
-        doc.save(tmp_file.name)
-        tmp_file.seek(0)
+    buffer = io.BytesIO()
+    doc.save(buffer)
+    buffer.seek(0)
 
-        # Send the temporary file as an attachment
-        response = make_response(send_file(tmp_file.name, as_attachment=True))
-        response.headers['Content-Disposition'] = 'attachment; filename=recognized_text.docx'
-        return response
+    # Return the Word file as the response
+    return {
+        "statusCode": 200,
+        "headers": {
+            "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "Content-Disposition": "attachment; filename=recognized_text.docx"
+        },
+        "body": buffer.getvalue(),
+        "isBase64Encoded": True
+    }
 
-if __name__ == '__main__':
-    import os
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+recognize_handwriting_handler = Handler("recognize_handwriting")
+download_text_handler = Handler("download_text")
