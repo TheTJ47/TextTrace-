@@ -2430,7 +2430,7 @@ CORS(app)  # This will enable CORS for all routes
 
 # Configure pytesseract path to Tesseract executable
 # Get the path to the Tesseract executable from environment variable
-TESSERACT_PATH = os.environ.get('TESSERACT_PATH', 'static/Tesseract-OCR/tesseract.exe')
+TESSERACT_PATH = os.environ.get('TESSERACT_PATH', '/static/Tesseract-OCR/tesseract.exe')
 
 # Set the path to the Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
