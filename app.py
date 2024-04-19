@@ -2310,6 +2310,12 @@ pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
 CSS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "style.css")
 SCRIPT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "script.js")
 
+@app.errorhandler(Exception)
+def handle_error(e):
+    # Log the exception
+    print(e)
+    return jsonify({'error': 'An unexpected error occurred'}), 500
+
 @app.route('/')
 def index():
     return send_from_directory(app.root_path, 'index.html')
