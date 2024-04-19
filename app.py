@@ -2293,9 +2293,12 @@ import docx
 from docx import Document
 import locale
 import os
+from flask_cors import CORS
+
 
 
 app = Flask(__name__)
+CORS(app)  # This will enable CORS for all routes
 
 # Configure pytesseract path to Tesseract executable
 # Update the path below to where Tesseract is installed on your system
