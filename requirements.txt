@@ -4,5 +4,4 @@ opencv-python
 pytesseract
 fpdf
 python-docx
-tempfile
-os
+
