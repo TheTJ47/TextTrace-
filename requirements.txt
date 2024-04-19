@@ -1,5 +1,8 @@
 flask
+numpy
 opencv-python
 pytesseract
 fpdf
 python-docx
+tempfile
+os
