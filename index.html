@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/style.css">
+    <title>TextTrace</title>
+    <script src="https://unpkg.com/docx@7.4.1/build/index.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="#">TextTrace</a>
+            </div>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#features">Features</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Effortless Text and Handwriting Recognition</h1>
+                    <p>Convert your Text-handwritten images into digital text with our advanced recognition technology.</p>
+                    <a href="#upload" class="btn">Get Started</a>
+                </div>
+            </div>
+        </section>z
+
+        <section id="about" class="section">
+            <div class="container">
+                <h2>About Us</h2>
+                <p>Welcome to our Text-Handwriting Recognition website! We are a team of dedicated final year students passionate about pushing the boundaries of technology and innovation. Our team brought together diverse skills and expertise to create "TextTrace", a cutting-edge Text-handwriting recognition system.
+                    Tejas Bagal-
+                    I took the lead in working of core algorithms backend code, development and designing the user interface for our Text-handwriting recognition system. My passion for machine learning and computer vision drove me to explore novel techniques to enhance the accuracy and efficiency of our system.
+                    
+                    Vedant, Vaibhav, Rupesh and Chaitanya-
+                    While I primarily led the technical development, my teammates played crucial roles in providing valuable insights, feedback, and support throughout the project. Despite their busy schedules, their encouragement and collaboration were instrumental in overcoming challenges and achieving our goals..</p>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="section">
+            <div class="container">
+                <h2>How It Works</h2>
+                <div class="step-container">
+                    <div class="step">
+                        <div class="step-icon-container">
+                            <div class="step-icon"><i class="fas fa-upload"></i></div>
+                            <h3>Upload Image</h3>
+                        </div>
+                        <div class="step-description">
+                            <p>Upload an image containing handwritten text. Supported formats include png, jpg, and tiff.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon-container">
+                            <div class="step-icon"><i class="fas fa-cogs"></i></div>
+                            <h3>Analyze and Recognize</h3>
+                        </div>
+                        <div class="step-description">
+                            <p>The Model Analyze and Recognize the uploaded image using our advanced recognition technology.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon-container">
+                            <div class="step-icon"><i class="fas fa-file-download"></i></div>
+                            <h3>Get Results</h3>
+                        </div>
+                        <div class="step-description">
+                            <p>View the recognized text in the "Recognized Text" box and download it as a text file or PDF.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="features" class="section">
+            <div class="container">
+                <h2>Features</h2>
+                <div class="feature-container">
+                    <div class="feature">
+                        <div class="feature-icon-container">
+                            <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                            <h3>Real-time Recognition</h3>
+                        </div>
+                        <div class="feature-description">
+                            <p>Our advanced technology recognizes Text, Handwritten text and digits in real-time, providing you with accurate results quickly.</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon-container">
+                            <div class="feature-icon"><i class="fas fa-file-import"></i></div>
+                            <h3>Support for Multiple File Formats</h3>
+                        </div>
+                        <div class="feature-description">
+                            <p>We support various file formats, including PNG, JPG, and TIFF, making it easy to work with different types of handwritten documents.</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon-container">
+                            <div class="feature-icon"><i class="fas fa-user-friends"></i></div>
+                            <h3>User-friendly Interface</h3>
+                        </div>
+                        <div class="feature-description">
+                            <p>Our user-friendly interface ensures a seamless experience, allowing you to effortlessly upload, analyze, and download your handwritten documents.</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon-container">
+                            <div class="feature-icon"><i class="fas fa-lock"></i></div>
+                            <h3>Secure and Private</h3>
+                        </div>
+                        <div class="feature-description">
+                            <p>We prioritize your privacy and security. Your data is processed securely and never shared with third parties.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+
+        <section id="upload" class="section">
+            <div class="container">
+                <h2>Upload Your Image</h2>
+                <div class="upload-box">
+                    <p style="font-size: 16px; color: pink;">Note:</p>
+                    <p style="font-size: 16px; color: #7a7979;">File extension support: png, jpg, tiff.</p>
+                    <p style="font-size: 16px; color: #7a7979;">File size limit: 2 MB.</p>
+                    <p style="font-size: 16px; color: #7a7979;">Image dimension limit: 1500 pixels.</p>
+                    <div class="upload-options">
+                        <div class="drag-and-drop">
+                            <input type="file" id="fileInput" class="file-input" accept="image/*" style="display: none;">
+                        </div>
+                        <button class="select-file-btn" onclick="document.getElementById('fileInput').click()">Select File For Recognition</button>
+                    </div>
+                    <p id="uploadedFilename"></p>
+                    <div class="image-preview">
+                        <img id="uploadedImage" src="" alt="">
+                        <div class="overlay"></div>
+                    </div>
+                    <button class="analyze-btn" onclick="resizeAndRecognize()">Download PDF</button>
+                    <button class="download-text-btn" onclick="downloadAsText()">Download as Word</button>
+                </div>
+
+            
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 TextTrace. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="../static/script.js"></script>
+</body>
+</html>
