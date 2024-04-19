@@ -352,23 +352,21 @@
             overlay.style.display = 'none'; // Hide overlay
     
             if (response.ok) {
-                const contentType = response.headers.get('Content-Type');
-                if (contentType && contentType.includes('application/json')) {
+                const blob = await response.blob();
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = 'recognized_text.docx';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                if (response.status === 404) {
+                    alert('Endpoint not found. Please check your server configuration.');
+                } else {
                     const errorResponse = await response.json();
                     alert(`Failed to download recognized text: ${errorResponse.error}`);
-                } else {
-                    const blob = await response.blob();
-                    const downloadUrl = window.URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.href = downloadUrl;
-                    link.download = 'recognized_text.docx';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
                 }
-            } else {
-                const errorResponse = await response.json();
-                alert(`Failed to download recognized text: ${errorResponse.error}`);
             }
         } catch (error) {
             console.error('Error:', error);
@@ -377,6 +375,7 @@
             overlay.style.display = 'none'; // Hide overlay
         }
     }
+    
     
     // Smooth scrolling to section
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
