@@ -617,7 +617,7 @@ async function resizeAndRecognize() {
 
             try {
                 overlay.style.display = 'block';
-                const response = await fetch('https://your-netlify-app-name.netlify.app/recognize_handwriting', {
+                const response = await fetch('https://662205c13e50b70008ff5815--thetexttrace.netlify.app/recognize_handwriting', {
                     method: 'POST',
                     body: formData,
                 });
@@ -672,7 +672,7 @@ async function downloadAsText() {
 
     try {
         overlay.style.display = 'block';
-        const response = await fetch('https://your-netlify-app-name.netlify.app/download_text', {
+        const response = await fetch('https://662205c13e50b70008ff5815--thetexttrace.netlify.app/recognize_handwriting', {
             method: 'POST',
             body: formData,
         });
