@@ -2402,6 +2402,6 @@ def download_text():
         response.headers['Content-Disposition'] = 'attachment; filename=recognized_text.docx'
         return response
 
-if __name__ == '__main__':
-    # Run Flask app on all network interfaces
-    app.run(host='0.0.0.0', port=5000, debug=True)
+# if __name__ == '__main__':
+#     # Run Flask app on all network interfaces
+#     app.run(host='0.0.0.0', port=5000, debug=True)
