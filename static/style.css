@@ -21,9 +21,9 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 10px 20px; /* Increase padding */
+  max-width: 100%; /* Set max-width to 100% */
+  margin: 0; /* Remove margin */
 }
 
 .logo a {
@@ -36,10 +36,12 @@ nav {
 nav ul {
   list-style: none;
   display: flex;
+  margin: 0; /* Remove margin */
+  padding: 0; /* Remove padding */
 }
 
 nav ul li {
-  margin-left: 20px;
+  margin-left: 10px; /* Reduce margin */
 }
 
 nav ul li a {
@@ -98,7 +100,7 @@ nav ul li a:hover {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0; /* Remove padding */
 }
 
 .section h2 {
