@@ -36,6 +36,8 @@ nav {
 nav ul {
   list-style: none;
   display: flex;
+  margin: 0; /* Remove margin */
+  padding: 0; /* Remove padding */
 }
 
 nav ul li {
